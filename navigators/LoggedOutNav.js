@@ -9,10 +9,11 @@ const Stack = createStackNavigator();
 export default function LoggedOutNav() {
   return (
     <Stack.Navigator
-      headerMode="screen"
       screenOptions={{
         headerBackTitleVisible: false,
-        headerTintColor: "black",
+        headerTitle: false,
+        headerTransparent: true,
+        headerTintColor: "white",
       }}
     >
       <Stack.Screen
