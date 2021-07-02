@@ -6,13 +6,7 @@ import { TextInput } from "../components/auth/AuthShard";
 
 export default function LogIn() {
   const passwordRef = useRef();
-  const {
-    control,
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm();
+  const { control, handleSubmit } = useForm();
   const onNext = (nextone) => {
     nextone?.current?.focus();
   };
@@ -38,13 +32,36 @@ export default function LogIn() {
             autoCapitalize={"none"}
             placeholderTextColor={"rgba(255,255,255,0.6)"}
             returnKeyType="next"
-            // onSubmitEditing={() => onNext(passwordRef)}
-            onChageText={onChange}
+            onSubmitEditing={() => onNext(passwordRef)}
+            onChangeText={onChange}
             onBlur={onBlur}
             value={value}
           />
         )}
         name="username"
+        defaultValue=" "
+      />
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, value, onBlur } }) => (
+          <TextInput
+            placeholder="Password"
+            ref={passwordRef}
+            autoCapitalize={"none"}
+            placeholderTextColor={"rgba(255,255,255,0.6)"}
+            returnKeyType="done"
+            lastOne={true}
+            secureTextEntry
+            onChangeText={onChange}
+            onBlur={onBlur}
+            value={value}
+            onSubmitEditing={handleSubmit(onSubmit)}
+          />
+        )}
+        name="password"
         defaultValue=" "
       />
       {/* <TextInput
