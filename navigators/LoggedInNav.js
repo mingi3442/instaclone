@@ -5,14 +5,16 @@ import Search from "../screens/Search";
 import Notifications from "../screens/Notifications";
 import Profile from "../screens/Profile";
 import { Ionicons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { View, Image } from "react-native";
 import TabIcon from "../components/nav/TabIcon";
 import Me from "../screens/Me";
 import SharedStackNav from "./SharedStackNav";
+import useMe from "../hooks/useMe";
 
 const Tabs = createBottomTabNavigator();
 
 export default function LoggedInNav() {
+  const { data } = useMe();
   return (
     <Tabs.Navigator
       tabBarOptions={{
@@ -66,9 +68,20 @@ export default function LoggedInNav() {
       <Tabs.Screen
         name="Me"
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon iconName={"person"} color={color} focused={focused} />
-          ),
+          tabBarIcon: ({ focused, color, size }) =>
+            data?.me?.avatar ? (
+              <Image
+                source={{ uri: data.me.avatar }}
+                style={{
+                  height: 20,
+                  width: 20,
+                  borderRadius: 10,
+                  ...(focused && { borderColor: "white", borderWidth: 1 }),
+                }}
+              />
+            ) : (
+              <TabIcon iconName={"person"} color={color} focused={focused} />
+            ),
         }}
       >
         {() => <SharedStackNav screenName="Me" />}

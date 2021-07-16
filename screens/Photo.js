@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-export default function Photo({ navigation }) {
+export default function Photo({ route }) {
   return (
     <View
       style={{
