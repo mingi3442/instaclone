@@ -1,13 +1,13 @@
+import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
-import { Image } from "react-native";
-import Feed from "../screens/Feed";
-import Likes from "../screens/Likes";
-import Me from "../screens/Me";
-import Notifications from "../screens/Notifications";
 import Photo from "../screens/Photo";
 import Profile from "../screens/Profile";
+import Feed from "../screens/Feed";
 import Search from "../screens/Search";
+import Notifications from "../screens/Notifications";
+import Me from "../screens/Me";
+import { Image } from "react-native";
+import Likes from "../screens/Likes";
 import Comments from "../screens/Comments";
 
 const Stack = createStackNavigator();
@@ -20,7 +20,8 @@ export default function SharedStackNav({ screenName }) {
         headerBackTitleVisible: false,
         headerTintColor: "white",
         headerStyle: {
-          shadowColor: "rgba(255,255,255,0.3)",
+          borderBottomColor: "rgba(255, 255, 255, 0.3)",
+          shadowColor: "rgba(255, 255, 255, 0.3)",
           backgroundColor: "black",
         },
       }}
@@ -32,7 +33,10 @@ export default function SharedStackNav({ screenName }) {
           options={{
             headerTitle: () => (
               <Image
-                style={{ width: 120, height: 40 }}
+                style={{
+                  width: 120,
+                  height: 40,
+                }}
                 resizeMode="contain"
                 source={require("../assets/logo.png")}
               />

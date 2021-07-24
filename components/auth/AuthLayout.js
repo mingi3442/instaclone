@@ -12,7 +12,7 @@ const Container = styled.View`
   align-items: center;
   justify-content: center;
   background-color: black;
-  padding: 0px 40px;
+  padding: 0px 20px;
 `;
 
 const Logo = styled.Image`
@@ -35,8 +35,10 @@ export default function AuthLayout({ children }) {
     >
       <Container>
         <KeyboardAvoidingView
-          style={{ width: "100%" }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{
+            width: "100%",
+          }}
+          behavior="position"
           keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 0}
         >
           <Logo

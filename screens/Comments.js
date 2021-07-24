@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-export default function Commetns() {
+export default function Comments() {
   return (
     <View
       style={{
@@ -11,7 +11,7 @@ export default function Commetns() {
         justifyContent: "center",
       }}
     >
-      <Text style={{ color: "white" }}>Commetns</Text>
+      <Text style={{ color: "white" }}>Comments</Text>
     </View>
   );
 }

@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Ionicons } from "@expo/vector-icons";
-import styled from "styled-components/native";
-import { Image, TouchableOpacity, useWindowDimensions } from "react-native";
-import { useEffect } from "react";
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import styled from "styled-components/native";
+import { Image, useWindowDimensions } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { gql, useMutation } from "@apollo/client";
 
 const TOGGLE_LIKE_MUTATION = gql`
@@ -57,13 +56,13 @@ const ExtraContainer = styled.View`
   padding: 10px;
 `;
 
-export default function Photo({ id, user, caption, file, isLiked, likes }) {
+function Photo({ id, user, caption, file, isLiked, likes }) {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(height - 450);
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      setImageHeight(height / 5);
+      setImageHeight(height / 3);
     });
   }, [file]);
   const updateToggleLike = (cache, result) => {
@@ -109,8 +108,11 @@ export default function Photo({ id, user, caption, file, isLiked, likes }) {
         <Username>{user.username}</Username>
       </Header>
       <File
-        resizeMode="contain"
-        style={{ width, height: imageHeight }}
+        resizeMode="cover"
+        style={{
+          width,
+          height: imageHeight,
+        }}
         source={{ uri: file }}
       />
       <ExtraContainer>
@@ -158,3 +160,4 @@ Photo.propTypes = {
   likes: PropTypes.number.isRequired,
   commentNumber: PropTypes.number,
 };
+export default Photo;

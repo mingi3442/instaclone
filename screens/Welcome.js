@@ -8,8 +8,8 @@ import AuthLayout from "../components/auth/AuthLayout";
 const LoginLink = styled.Text`
   color: ${colors.blue};
   font-weight: 600;
-  margin: 0 auto;
   margin-top: 20px;
+  text-align: center;
 `;
 
 export default function Welcome({ navigation }) {
@@ -18,7 +18,7 @@ export default function Welcome({ navigation }) {
   return (
     <AuthLayout>
       <AuthButton
-        text="Create Account"
+        text="Create New Account"
         disabled={false}
         onPress={goToCreateAccount}
       />

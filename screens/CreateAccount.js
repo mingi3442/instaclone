@@ -1,10 +1,10 @@
-import { gql, useMutation } from "@apollo/client";
 import React, { useRef } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { gql, useMutation } from "@apollo/client";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import AuthButton from "../components/auth/AuthButton";
 import AuthLayout from "../components/auth/AuthLayout";
-import { TextInput } from "../components/auth/AuthShard";
+import { TextInput } from "../components/auth/AuthShared";
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccount(
@@ -28,7 +28,7 @@ const CREATE_ACCOUNT_MUTATION = gql`
 `;
 
 export default function CreateAccount({ navigation }) {
-  const { control, handleSubmit, getValues } = useForm();
+  const { register, handleSubmit, setValue, getValues } = useForm();
   const onCompleted = (data) => {
     const {
       createAccount: { ok },
@@ -51,10 +51,12 @@ export default function CreateAccount({ navigation }) {
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const onNext = (nextone) => {
-    nextone?.current?.focus();
+
+  const onNext = (nextOne) => {
+    nextOne?.current?.focus();
   };
-  const onSubmit = (data) => {
+
+  const onValid = (data) => {
     if (!loading) {
       createAccountMutation({
         variables: {
@@ -63,107 +65,74 @@ export default function CreateAccount({ navigation }) {
       });
     }
   };
+
+  useEffect(() => {
+    register("firstName", {
+      required: true,
+    });
+    register("lastName", {
+      required: true,
+    });
+    register("username", {
+      required: true,
+    });
+    register("email", {
+      required: true,
+    });
+    register("password", {
+      required: true,
+    });
+  }, [register]);
   return (
     <AuthLayout>
-      <Controller
-        control={control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            autoFocus
-            placeholder="First Name"
-            placeholderTextColor={"rgba(255,255,255,0.6)"}
-            returnKeyType="next"
-            onSubmitEditing={() => onNext(lastNameRef)}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            value={value}
-          />
-        )}
-        name="firstName"
-        defaultValue=""
+      <TextInput
+        placeholder="First Name"
+        returnKeyType="next"
+        onSubmitEditing={() => onNext(lastNameRef)}
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onChangeText={(text) => setValue("firstName", text)}
       />
-      <Controller
-        control={control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            ref={lastNameRef}
-            placeholder="Last Name"
-            placeholderTextColor={"rgba(255,255,255,0.6)"}
-            returnKeyType="next"
-            onSubmitEditing={() => onNext(usernameRef)}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            value={value}
-          />
-        )}
-        name="lastName"
-        defaultValue=""
+      <TextInput
+        ref={lastNameRef}
+        placeholder="Last Name"
+        returnKeyType="next"
+        onSubmitEditing={() => onNext(usernameRef)}
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onChangeText={(text) => setValue("lastName", text)}
       />
-      <Controller
-        control={control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            ref={usernameRef}
-            autoCapitalize={"none"}
-            placeholder="Username"
-            placeholderTextColor={"rgba(255,255,255,0.6)"}
-            returnKeyType="next"
-            onSubmitEditing={() => onNext(emailRef)}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            value={value}
-          />
-        )}
-        name="username"
-        defaultValue=""
+      <TextInput
+        ref={usernameRef}
+        placeholder="Username"
+        autoCapitalize="none"
+        returnKeyType="next"
+        onSubmitEditing={() => onNext(emailRef)}
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onChangeText={(text) => setValue("username", text)}
       />
-      <Controller
-        control={control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            ref={emailRef}
-            placeholder="Email"
-            placeholderTextColor={"rgba(255,255,255,0.6)"}
-            returnKeyType="next"
-            keyboardType="email-address"
-            onSubmitEditing={() => onNext(passwordRef)}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            value={value}
-          />
-        )}
-        name="email"
-        defaultValue=""
+      <TextInput
+        ref={emailRef}
+        placeholder="Email"
+        autoCapitalize="none"
+        keyboardType="email-address"
+        returnKeyType="next"
+        onSubmitEditing={() => onNext(passwordRef)}
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onChangeText={(text) => setValue("email", text)}
       />
-      <Controller
-        control={control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            ref={passwordRef}
-            placeholder="PassWord"
-            secureTextEntry
-            placeholderTextColor={"rgba(255,255,255,0.6)"}
-            returnKeyType="done"
-            lastOne={true}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            value={value}
-            onSubmitEditing={handleSubmit(onSubmit)}
-          />
-        )}
-        name="password"
-        defaultValue=""
+      <TextInput
+        ref={passwordRef}
+        placeholder="Password"
+        secureTextEntry
+        returnKeyType="done"
+        lastOne={true}
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onChangeText={(text) => setValue("password", text)}
+        onSubmitEditing={handleSubmit(onValid)}
       />
-
       <AuthButton
         text="Create Account"
         disabled={false}
-        onPress={handleSubmit(onSubmit)}
+        onPress={handleSubmit(onValid)}
       />
     </AuthLayout>
   );

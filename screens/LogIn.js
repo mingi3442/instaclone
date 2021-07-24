@@ -1,10 +1,11 @@
 import { gql, useMutation } from "@apollo/client";
-import React, { useEffect, useRef } from "react";
-import { Controller, useForm } from "react-hook-form";
+import React, { useRef } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { isLoggedInVar, logUserIn } from "../apollo";
 import AuthButton from "../components/auth/AuthButton";
 import AuthLayout from "../components/auth/AuthLayout";
-import { TextInput } from "../components/auth/AuthShard";
+import { TextInput } from "../components/auth/AuthShared";
 
 const LOGIN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {
@@ -16,8 +17,8 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-export default function LogIn({ route: { params } }) {
-  const { control, handleSubmit, watch } = useForm({
+export default function Login({ route: { params } }) {
+  const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       password: params?.password,
       username: params?.username,
@@ -32,20 +33,13 @@ export default function LogIn({ route: { params } }) {
       await logUserIn(token);
     }
   };
-  const [logInMutation, { loading }] = useMutation(LOGIN_MUTATION, {
+  const [logInMutation, { loading, error }] = useMutation(LOGIN_MUTATION, {
     onCompleted,
   });
-  const onNext = (nextone) => {
-    nextone?.current?.focus();
+  const onNext = (nextOne) => {
+    nextOne?.current?.focus();
   };
-  //   const onValid = (data) => {
-  //     console.log(data);
-  //   };
-  //   useEffect(() => {
-  //     register("username");
-  //     register("password");
-  //   }, [register]);
-  const onSubmit = (data) => {
+  const onValid = (data) => {
     if (!loading) {
       logInMutation({
         variables: {
@@ -55,67 +49,41 @@ export default function LogIn({ route: { params } }) {
     }
   };
 
+  useEffect(() => {
+    register("username", {
+      required: true,
+    });
+    register("password", {
+      required: true,
+    });
+  }, [register]);
   return (
     <AuthLayout>
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            placeholder="Username"
-            autoCapitalize={"none"}
-            placeholderTextColor={"rgba(255,255,255,0.6)"}
-            returnKeyType="next"
-            onSubmitEditing={() => onNext(passwordRef)}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            value={value}
-          />
-        )}
-        name="username"
-        defaultValue={params?.username && ""}
+      <TextInput
+        value={watch("username")}
+        placeholder="Username"
+        returnKeyType="next"
+        autoCapitalize="none"
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onSubmitEditing={() => onNext(passwordRef)}
+        onChangeText={(text) => setValue("username", text)}
       />
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            placeholder="Password"
-            ref={passwordRef}
-            autoCapitalize={"none"}
-            placeholderTextColor={"rgba(255,255,255,0.6)"}
-            returnKeyType="done"
-            lastOne={true}
-            secureTextEntry
-            onChangeText={onChange}
-            onBlur={onBlur}
-            value={value}
-            onSubmitEditing={handleSubmit(onSubmit)}
-          />
-        )}
-        name="password"
-        defaultValue={params?.password && ""}
-      />
-      {/* <TextInput
+      <TextInput
+        value={watch("password")}
         ref={passwordRef}
-        placeholder="PassWord"
+        placeholder="Password"
         secureTextEntry
-        placeholderTextColor={"rgba(255,255,255,0.6)"}
         returnKeyType="done"
         lastOne={true}
-        // onSubmitEditing={handleSubmit(onValid)}
-        onChageText={(text) => setValue("password", text)}
-      /> */}
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+        onSubmitEditing={handleSubmit(onValid)}
+        onChangeText={(text) => setValue("password", text)}
+      />
       <AuthButton
         text="Log In"
         loading={loading}
         disabled={!watch("username") || !watch("password")}
-        // onPress={handleSubmit(onValid)}
-        onPress={handleSubmit(onSubmit)}
+        onPress={handleSubmit(onValid)}
       />
     </AuthLayout>
   );

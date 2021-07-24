@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 
-export default function Profile({ route, navigation }) {
+export default function Profile({ navigation, route }) {
   useEffect(() => {
     if (route?.params?.username) {
       navigation.setOptions({
@@ -9,7 +9,6 @@ export default function Profile({ route, navigation }) {
       });
     }
   }, []);
-
   return (
     <View
       style={{
